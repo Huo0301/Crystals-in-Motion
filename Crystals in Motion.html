@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>Crystals in Motion</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: url('2B21D25D-BBBC-4390-8FB2-F8B224D73EA5.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      backdrop-filter: brightness(0.9);
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .crystal-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    .crystal {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #9cf, #36c);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #9cf;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .crystal.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #fff;
+    }
+    .result {
+      margin-top: 30px;
+      font-size: 20px;
+    }
+    .card {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      background: #222;
+      border-radius: 8px;
+      display: inline-block;
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h1>MBTI 水晶球占卜</h1>
+  <p>請從每一對中選一顆：E/I、N/S、F/T、J/P、A/T，共 5 顆</p>
+
+  <div class="crystal-container" id="crystalContainer"></div>
+
+  <div class="result" id="resultText"></div>
+  <div class="card" id="cardInfo" style="display: none;"></div>
+
+  <script>
+    const mbtiPairs = [
+      ["E", "I"],
+      ["N", "S"],
+      ["F", "T"],
+      ["J", "P"],
+      ["A", "T2"] // A/T 的 T 用 T2 表示避免與上方 T 混淆
+    ];
+
+    const displayMap = { "T2": "T" }; // 顯示時 T2 轉回 T
+    const cardData = {
+      "ENFJ-A": {
+        title: "熱情的領導者",
+        keywords: ["領導", "關懷", "遠見", "自信", "感染力"],
+        description: "ENFJ-A 擅長引導他人，有強烈的理想與責任感。"
+      },
+      "INTP-T": {
+        title: "邏輯思考者",
+        keywords: ["冷靜", "分析", "好奇", "創新", "理性"],
+        description: "INTP-T 通常是深思熟慮的探索者，喜歡追根究柢。"
+      }
+      // 👉 更多卡牌你可以持續加入（共 32 組）
+    };
+
+    const container = document.getElementById("crystalContainer");
+    const resultText = document.getElementById("resultText");
+    const cardInfo = document.getElementById("cardInfo");
+
+    let selected = {};
+
+    // 初始化水晶球
+    mbtiPairs.flat().forEach(letter => {
+      const ball = document.createElement("div");
+      ball.className = "crystal";
+      ball.textContent = displayMap[letter] || letter;
+      ball.dataset.letter = letter;
+
+      ball.addEventListener("click", () => {
+        const pair = mbtiPairs.find(group => group.includes(letter));
+        const other = pair.find(l => l !== letter);
+
+        // 如果已選擇這個 letter，取消
+        if (selected[pair]) {
+          if (selected[pair] === letter) {
+            delete selected[pair];
+            ball.classList.remove("selected");
+          }
+        } else {
+          // 選擇 letter，先清掉對立字母
+          const prev = selected[pair];
+          if (prev) {
+            const prevBall = [...container.children].find(b => b.dataset.letter === prev);
+            if (prevBall) prevBall.classList.remove("selected");
+          }
+          selected[pair] = letter;
+          ball.classList.add("selected");
+        }
+
+        updateDisplay();
+      });
+
+      container.appendChild(ball);
+    });
+
+    function updateDisplay() {
+      const final = mbtiPairs.map(pair => selected[pair] || "").filter(Boolean);
+      const displaySelected = final.map(l => displayMap[l] || l);
+      resultText.textContent = "目前選擇：" + displaySelected.join(" ");
+
+      if (final.length === 5) {
+        const type = displaySelected.join("");
+        const card = cardData[type];
+        if (card) {
+          cardInfo.style.display = "block";
+          cardInfo.innerHTML = `
+            <h2>${type}｜${card.title}</h2>
+            <p><strong>關鍵詞：</strong>${card.keywords.join(" / ")}</p>
+            <p>${card.description}</p>
+          `;
+        } else {
+          cardInfo.style.display = "block";
+          cardInfo.innerHTML = `<p>尚未建立卡牌資料：${type}</p>`;
+        }
+      } else {
+        cardInfo.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
