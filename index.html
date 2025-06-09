@@ -171,18 +171,12 @@
 
       if (final.length === 5) {
         const type = displaySelected.join("");
-        const card = cardData[type];
-        if (card) {
-          cardInfo.style.display = "block";
-          cardInfo.innerHTML = `
-            <h2>${type}｜${card.title}</h2>
-            <p><strong>關鍵詞：</strong>${card.keywords.join(" / ")}</p>
-            <p>${card.description}</p>
-          `;
-        } else {
-          cardInfo.style.display = "block";
-          cardInfo.innerHTML = `<p>尚未建立卡牌資料：${type}</p>`;
-        }
+ const cardImageUrl = `https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/MBTI_cards/${type}.png`;
+cardInfo.style.display = "block";
+cardInfo.innerHTML = `
+  <h2>${type}</h2>
+  <img src="${cardImageUrl}" alt="${type} 卡牌" style="max-width: 100%; border-radius: 8px;" />
+`;
       } else {
         cardInfo.style.display = "none";
       }
