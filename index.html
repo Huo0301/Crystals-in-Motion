@@ -21,14 +21,14 @@
     }
 
     .crystal-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 30px;
-    }
-
-    .crystal {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+  justify-items: center;
+  max-width: 600px;
+  margin: 30px auto 0;
+}
+     .crystal {
       width: 80px;
       height: 80px;
       border-radius: 50%;
