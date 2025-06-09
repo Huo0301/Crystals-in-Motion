@@ -101,7 +101,7 @@
 
     @keyframes fadeSteps {
       0% { opacity: 0; }
-      30% { opacity: 1; content: "命運之輪轉動中⋯"; }
+      30% { opacity: 1; content: "讓我看看哦⋯"; }
       60% { opacity: 1; }
       100% { opacity: 1; }
     }
@@ -186,13 +186,13 @@
       cardInfo.classList.remove("reveal");
 
       if (final.length === 5) {
-        resultText.textContent = "命運之輪轉動中⋯";
+        resultText.textContent = "讓我看看哦⋯";
         const type = displaySelected.join("");
         const cardImageUrl = `https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/MBTI_cards/${type}.png`;
 
         // 模擬占卜延遲
         setTimeout(() => {
-          resultText.textContent = `你的命運是：${type}`;
+          resultText.textContent = `你的人格卡牌是：${type}`;
           cardInfo.style.display = "block";
           cardInfo.innerHTML = `
             <h2>${type}</h2>
