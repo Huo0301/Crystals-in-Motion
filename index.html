@@ -28,12 +28,9 @@
     .crystal {
       width: 80px;
       height: 80px;
-      background: radial-gradient(circle at 30% 30%, #9cf, #36c);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
+      background-size: cover;
+      background-position: center;
       cursor: pointer;
       box-shadow: 0 0 10px #9cf;
       transition: transform 0.2s, box-shadow 0.2s;
@@ -60,7 +57,7 @@
 <body>
   <h1>
     <img src="title.png" style="width: 100%; height: auto;">
-</h1>
+  </h1>
   <p>請從每一對中選一顆：E/I、N/S、F/T、J/P、A/T，共 5 顆</p>
 
   <div class="crystal-container" id="crystalContainer"></div>
@@ -74,20 +71,33 @@
       ["N", "S"],
       ["F", "T"],
       ["J", "P"],
-      ["A", "T2"] // A/T 的 T 用 T2 表示避免與上方 T 混淆
+      ["A", "T2"]
     ];
 
-    const displayMap = { "T2": "T" }; // 顯示時 T2 轉回 T
+    const displayMap = { "T2": "T" };
+
+    const imageMap = {
+      "E": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_E.png",
+      "I": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_I.png",
+      "N": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_N.png",
+      "S": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_S.png",
+      "F": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_F.png",
+      "T": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_T.png",
+      "J": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_J.png",
+      "P": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_P.png",
+      "A": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_A.png",
+      "T2": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_T2.png"
+    };
+
     const cardData = {
       "ENFJA": {
-       image: "ENFJA.jpg"
+        image: "ENFJA.jpg"
       },
       "INTP-T": {
         title: "邏輯思考者",
         keywords: ["冷靜", "分析", "好奇", "創新", "理性"],
         description: "INTP-T 通常是深思熟慮的探索者，喜歡追根究柢。"
       }
-      // 👉 更多卡牌你可以持續加入（共 32 組）
     };
 
     const container = document.getElementById("crystalContainer");
@@ -96,25 +106,22 @@
 
     let selected = {};
 
-    // 初始化水晶球
     mbtiPairs.flat().forEach(letter => {
       const ball = document.createElement("div");
       ball.className = "crystal";
-      ball.textContent = displayMap[letter] || letter;
+      ball.style.backgroundImage = `url('${imageMap[letter]}')`;
       ball.dataset.letter = letter;
 
       ball.addEventListener("click", () => {
         const pair = mbtiPairs.find(group => group.includes(letter));
         const other = pair.find(l => l !== letter);
 
-        // 如果已選擇這個 letter，取消
         if (selected[pair]) {
           if (selected[pair] === letter) {
             delete selected[pair];
             ball.classList.remove("selected");
           }
         } else {
-          // 選擇 letter，先清掉對立字母
           const prev = selected[pair];
           if (prev) {
             const prevBall = [...container.children].find(b => b.dataset.letter === prev);
