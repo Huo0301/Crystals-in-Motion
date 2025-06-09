@@ -65,101 +65,114 @@
   <div class="result" id="resultText"></div>
   <div class="card" id="cardInfo" style="display: none;"></div>
 
-  <script>
-    const mbtiPairs = [
-      ["E", "I"],
-      ["N", "S"],
-      ["F", "T"],
-      ["J", "P"],
-      ["A", "T"]
-    ];
+ <script>
+  const mbtiPairs = [
+    ["E", "I"],
+    ["N", "S"],
+    ["F", "T"],
+    ["J", "P"],
+    ["A", "T2"]
+  ];
 
-    const displayMap = { "T": "T" };
+  const displayMap = { "T2": "T" };
 
-    const imageMap = {
-      "E": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_E.png",
-      "I": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_I.png",
-      "N": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_N.png",
-      "S": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_S.png",
-      "F": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_F.png",
-      "T": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_T1.png",
-      "J": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_J.png",
-      "P": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_P.png",
-      "A": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_A.png",
-      "T": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_T2.png"
-    };
+  const imageMap = {
+    "E": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_E.png",
+    "I": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_I.png",
+    "N": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_N.png",
+    "S": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_S.png",
+    "F": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_F.png",
+    "T": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_T.png",
+    "J": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_J.png",
+    "P": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_P.png",
+    "A": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_A.png",
+    "T2": "https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/Crystal_balls/Crystal_ball_T2.png"
+  };
 
-    const cardData = {
-      "ENFJA": {
-        image: "ENFJA.jpg"
-      },
-      "INTP-T": {
-        title: "邏輯思考者",
-        keywords: ["冷靜", "分析", "好奇", "創新", "理性"],
-        description: "INTP-T 通常是深思熟慮的探索者，喜歡追根究柢。"
-      }
-    };
+  const cardData = {
+    "ENFJA": {
+      image: "ENFJA.jpg"
+    },
+    "INTP-T": {
+      title: "邏輯思考者",
+      keywords: ["冷靜", "分析", "好奇", "創新", "理性"],
+      description: "INTP-T 通常是深思熟慮的探索者，喜歡追根究柢。"
+    }
+    // 更多卡牌可以持續加入
+  };
 
-    const container = document.getElementById("crystalContainer");
-    const resultText = document.getElementById("resultText");
-    const cardInfo = document.getElementById("cardInfo");
+  const container = document.getElementById("crystalContainer");
+  const resultText = document.getElementById("resultText");
+  const cardInfo = document.getElementById("cardInfo");
 
-    let selected = {};
+  let selected = {};
 
-    mbtiPairs.flat().forEach(letter => {
-      const ball = document.createElement("div");
-      ball.className = "crystal";
-      ball.style.backgroundImage = `url('${imageMap[letter]}')`;
-      ball.dataset.letter = letter;
+  // 初始化水晶球
+  mbtiPairs.flat().forEach(letter => {
+    const ball = document.createElement("div");
+    ball.className = "crystal";
 
-      ball.addEventListener("click", () => {
-        const pair = mbtiPairs.find(group => group.includes(letter));
-        const other = pair.find(l => l !== letter);
+    // 加入圖片
+    const img = document.createElement("img");
+    img.src = imageMap[letter];
+    img.alt = letter;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.borderRadius = "50%";
 
-        if (selected[pair]) {
-          if (selected[pair] === letter) {
-            delete selected[pair];
-            ball.classList.remove("selected");
-          }
-        } else {
-          const prev = selected[pair];
-          if (prev) {
-            const prevBall = [...container.children].find(b => b.dataset.letter === prev);
-            if (prevBall) prevBall.classList.remove("selected");
-          }
-          selected[pair] = letter;
-          ball.classList.add("selected");
-        }
+    ball.appendChild(img);
+    ball.dataset.letter = letter;
 
-        updateDisplay();
-      });
+    ball.addEventListener("click", () => {
+      const pair = mbtiPairs.find(group => group.includes(letter));
+      const other = pair.find(l => l !== letter);
 
-      container.appendChild(ball);
-    });
-
-    function updateDisplay() {
-      const final = mbtiPairs.map(pair => selected[pair] || "").filter(Boolean);
-      const displaySelected = final.map(l => displayMap[l] || l);
-      resultText.textContent = "目前選擇：" + displaySelected.join(" ");
-
-      if (final.length === 5) {
-        const type = displaySelected.join("");
-        const card = cardData[type];
-        if (card) {
-          cardInfo.style.display = "block";
-          cardInfo.innerHTML = `
-            <h2>${type}｜${card.title}</h2>
-            <p><strong>關鍵詞：</strong>${card.keywords.join(" / ")}</p>
-            <p>${card.description}</p>
-          `;
-        } else {
-          cardInfo.style.display = "block";
-          cardInfo.innerHTML = `<p>尚未建立卡牌資料：${type}</p>`;
+      // 如果已選擇這個 letter，取消
+      if (selected[pair]) {
+        if (selected[pair] === letter) {
+          delete selected[pair];
+          ball.classList.remove("selected");
         }
       } else {
-        cardInfo.style.display = "none";
+        // 選擇 letter，先清掉對立字母
+        const prev = selected[pair];
+        if (prev) {
+          const prevBall = [...container.children].find(b => b.dataset.letter === prev);
+          if (prevBall) prevBall.classList.remove("selected");
+        }
+        selected[pair] = letter;
+        ball.classList.add("selected");
       }
+
+      updateDisplay();
+    });
+
+    container.appendChild(ball);
+  });
+
+  function updateDisplay() {
+    const final = mbtiPairs.map(pair => selected[pair] || "").filter(Boolean);
+    const displaySelected = final.map(l => displayMap[l] || l); // 轉換 T2 → T 顯示
+    resultText.textContent = "目前選擇：" + displaySelected.join(" ");
+
+    if (final.length === 5) {
+      const type = displaySelected.join("");
+      const card = cardData[type];
+      if (card) {
+        cardInfo.style.display = "block";
+        cardInfo.innerHTML = `
+          <h2>${type}｜${card.title}</h2>
+          <p><strong>關鍵詞：</strong>${card.keywords.join(" / ")}</p>
+          <p>${card.description}</p>
+        `;
+      } else {
+        cardInfo.style.display = "block";
+        cardInfo.innerHTML = `<p>尚未建立卡牌資料：${type}</p>`;
+      }
+    } else {
+      cardInfo.style.display = "none";
     }
-  </script>
+  }
+</script>
 </body>
 </html>
