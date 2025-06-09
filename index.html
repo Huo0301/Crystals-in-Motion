@@ -31,7 +31,7 @@
       border-radius: 50%;
       cursor: pointer;
       position: relative;
-      overflow: visible; /* 讓陰影可以超出 */
+      overflow: visible;
       transition: transform 0.2s;
       display: flex;
       align-items: center;
@@ -43,7 +43,7 @@
       top: 0; left: 0; right: 0; bottom: 0;
       border-radius: 50%;
       box-shadow: 0 0 10px #9cf;
-      z-index: -1; /* 陰影放在水晶球下方 */
+      z-index: -1;
       transition: box-shadow 0.2s;
     }
     .crystal.selected {
@@ -61,7 +61,7 @@
       border-radius: 50%;
       display: block;
       position: relative;
-      z-index: 1; /* 圖片放在陰影上方 */
+      z-index: 1;
     }
     .result {
       margin-top: 30px;
@@ -122,7 +122,6 @@
         keywords: ["冷靜", "分析", "好奇", "創新", "理性"],
         description: "INTP-T 通常是深思熟慮的探索者，喜歡追根究柢。"
       }
-      // 更多卡牌可以持續加入
     };
 
     const container = document.getElementById("crystalContainer");
@@ -136,29 +135,25 @@
       const ball = document.createElement("div");
       ball.className = "crystal";
 
-      // 加入圖片
       const img = document.createElement("img");
       img.src = imageMap[letter];
       img.alt = letter;
-
       ball.appendChild(img);
       ball.dataset.letter = letter;
 
       ball.addEventListener("click", () => {
         const pair = mbtiPairs.find(group => group.includes(letter));
-        const other = pair.find(l => l !== letter);
 
-        if (selected[pair]) {
-          if (selected[pair] === letter) {
-            delete selected[pair];
-            ball.classList.remove("selected");
-          }
+        // 移除同組的所有選中樣式
+        [...container.children].forEach(b => {
+          const l = b.dataset.letter;
+          if (pair.includes(l)) b.classList.remove("selected");
+        });
+
+        // 切換目前這個水晶球的選中狀態
+        if (selected[pair] === letter) {
+          delete selected[pair];
         } else {
-          const prev = selected[pair];
-          if (prev) {
-            const prevBall = [...container.children].find(b => b.dataset.letter === prev);
-            if (prevBall) prevBall.classList.remove("selected");
-          }
           selected[pair] = letter;
           ball.classList.add("selected");
         }
