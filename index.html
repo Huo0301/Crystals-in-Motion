@@ -20,15 +20,16 @@
       margin-bottom: 10px;
     }
 
- .crystal-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 每列 2 個（2 欄） */
-  gap: 15px;
-  justify-items: center;
-  max-width: 400px;
-  margin: 30px auto 0;
-}
-     .crystal {
+    .crystal-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* 每列 2 個（2 欄） */
+      gap: 15px;
+      justify-items: center;
+      max-width: 400px;
+      margin: 30px auto 0;
+    }
+
+    .crystal {
       width: 80px;
       height: 80px;
       border-radius: 50%;
@@ -79,12 +80,12 @@
 
     .card {
       margin-top: 20px;
-      border: 1px solid #ccc;
-      padding: 15px;
-      background: #222;
-      border-radius: 8px;
+      padding: 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
       display: inline-block;
-      max-width: 300px;
+      max-width: 100%;
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.8s ease, transform 0.8s ease;
@@ -190,16 +191,14 @@
         const type = displaySelected.join("");
         const cardImageUrl = `https://raw.githubusercontent.com/Huo0301/Crystals-in-Motion/main/MBTI_cards/${type}.png`;
 
-        // 模擬占卜延遲
         setTimeout(() => {
           resultText.textContent = `你的人格卡牌是：${type}`;
           cardInfo.style.display = "block";
           cardInfo.innerHTML = `
-            <h2>${type}</h2>
-            <img src="${cardImageUrl}" alt="${type} 卡牌" style="max-width: 100%; border-radius: 8px;" />
+            <img src="${cardImageUrl}" alt="${type}" style="max-width: 100%; border-radius: 8px; box-shadow: none;" />
           `;
           cardInfo.classList.add("reveal");
-        }, 1000); // 1秒延遲
+        }, 1000);
       }
     }
   </script>
